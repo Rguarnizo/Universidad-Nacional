@@ -1,0 +1,6 @@
+#+TITLE: Computación Paralela y Distribuida
+#+SUBTITLE: Universidad Nacional de Colombia
+#+AUTHOR: Rubén Darío Guarnizo Martínez.
+
+
+[[file:Taller_Paralelismo_a_nivel_de_tarea.org][Taller Paralelismo a nivel de tarea]]

@@ -1,0 +1,11 @@
+#+TITLE: 2022 1 Octavo Semestre
+
+
+* [[file:Lenguajes de Programacion/Lenguajes-de-Programación.org][Lenguajes de programación]]
+* [[file:Criptografia/Criptografia.org][Criptografia]]
+* [[file:Ingeniería De Software/Ingeniería De Software.org][Ingeniería de Software]]
+* [[file:Computación Paralela y Distribuida/Computación_Paralela_Y_Distribuida.org][Computación Paralela y Distrubuida]]
+* [[file:Teoria de la información/Teoría de la información.org][Teoria de la información]]
+
+* TODO Criptografia de llave simetrica
+* TODO Otro Todo item, a ver si funciona

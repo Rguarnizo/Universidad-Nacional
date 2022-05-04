@@ -1,0 +1,201 @@
+#+TITLE: Lenguajes de Programación.
+#+AUTHOR: Rubén Darío Guarnizo Martínez
+
+[[https://sites.google.com/unal.edu.co/lenguajesdeprogramacion-2022-1][Pagina del curso]]
+
+* Procesadores de lenguajes
+** Interpretes
+Recibe codigo fuente del programa y reciben también datos, se genera una salida correspondiente.
+
+[[File:./Interprete.png]]
+
+** Traductores.
+Traducir de un lenguaje de alto nivel, pasando por el lenguaje ensamblador pasa al lenguaje de maquina.
+
+
+*** Ensambladores.
+Traductores de lenguaje ensamblador a lenguaje de maquina.
+*** Compiladores.
+Traduce todo el codigo fuente de alto nivel hasta el lenguaje de maquina.
+
+[[File: ./Compilador.png]]
+
+*** Desensambladores.
+Se entrega un binario y se intenta extraer el codigo en ensamblador
+
+*** Decompiladores.
+Más allá de desensambladores, intentan reconstruir el codigo fuente hasta un lenguaje de alto nivel.
+
+** Interprete vs Compilador
++ Usualmente un programa compilado des más rapido que un lengueje interpretado
++ Mejor diagnostico de errores en el Interprete.
++ Los programas que utilizan el interprete necesitan de este si o sí, codigo fuente disponible en todo momento.
++ Los programas compilados unicamente necesitan de un traductor una unica vez, despues no hace falta el codigo fuente unicamente el ejecutable.
+
+** Estructura de un compilador.
+[[File:./FasesCompilador.png]]
+
+*** Analizador lexico
++ Es quien recibe el codigo fuente.
++ Agrupa los caracteres del archivo en elementos lexicos (Palabras reservadas, identificadores, variables, cosas validas dentro del lenguaje)
++ Errores lexicos: Caracteres o tokens no permitidos.
+*** Analisis Sintáctico
++ Entran los tokens(identificadores,==,+)
++ Analiza la estructura de los tokens, para saber si son validos
++ Detecta erroeres sintactico.
++ *Decide si una cadena dada pertenece a una GIC*
+
+  [[File:./SintaxisAnalysis.png]]
+
+**** Arbol de sintaxis abstracta(AST abstrac sintaxis tree).
+Captura estructuras anidadas, abstrae la sintaxis especifica
+*** Analisis Semantico
+
++ Traducción al lenguaje especifico.
++ Verifica errores semanticos (Los tipos están definidos correctamente, metodos definidos una sola vez, metodos llamados con numero correcto de parametros,Clases definidas una sola vez)
++ Añade información semantica al AST
+
+*** Generación codigo intermedio.
++ Representa el codigo en una representación intermedia.
++ Traduce el arbol AST a un lenguaje intermedio (Assambly o otro).
+*** Optimización
+ + Mejora el rendimiento, tamaño del codigo, confiabilidad, tamaño del codigo.
+
+    [[File:./Optimize.png]]
+ + Reconstruir el arbol AST para evitar hacer operaciones que ya se hicieron previamente.
+
+*** Generación de Código objeto
++ Proceso sencillo de traducción a alguna arquitectura especifica, codigo de instrucciones de un procesador.
+** Fases del compilador
+
+[[File:./FasesCompilador.png]]
+
+* Análisis lexico (Scanner,Tokenizer,Lexer)
+ + Encargado de recibir el codigo fuente,
+ + Lee caracter a caracter y agrupo en elementos *lexicos del lenguaje (Tokens)*,
+ + Se centra en los elementos importantes, descarta los demas
+*** Errores Lexicos
++ Caracteres que no pertenecen al alfabeto del lenguaje.
++ Cadena que no coincide con ninguno de los patranos aceptados del lenguaje.
++ El compilador tiene una vision local si ve la cadena "Wihle" creera que es un identificador. (En una etapa posterior se vera que esto no es posible)
+*** Clases de tokens
++ Palabras reservadas(if,then,...)
++ Simbolos especiales (Operadores aritmeticos, Logicos,...)
++ Cadenas no especificas (Identificador, número real,...)
++ EOF (Fin del archivo).
+
+    [[File:./RegularExpresions.png]]
++ Se necesita una politica de elección para mirar cuando las palabras reservadas corresponden efectivamente a estas. (Palabra resevada vs identificador).
+  + *Resolución Implicita:* Se verifica si un identificador esta en la lista de palabras reservadas.
+  + *Resolución Explicita:* Poner las expresiones más especificas arriba, para que detecte de primeras la palabra reservada.
++ Principio de subcadena más larga, pensar en: = == === , allí se necesita leer más elementos para clasificar el token.
+*** Implementación de Analazadores lexicos.
++ *Usando gerador automático*: FLex, ANTLR.
++ *A mano*: Implementando diagrama de transiciones, estructuras de selección multiple (switch).
+
+
+
+
+[[https://colab.research.google.com/drive/18Pl3q5nmMuFlL3tmUFvR4YmEqlhbRYnZ?hl=es&pli=1#scrollTo=vmLim2XJE5vJ][Analizador Lexico Código!]]
+
+* Análizador Sintactico
+** Gramaticas
+*** Derivación
+Es una secuencia de cadenas de simbolos en la que cada cadena es el resultado de la aplicación de una regla de la gramatica a la cadena anterior
+*** Derivación Valida
+Aquella en la que la primera cadena de la secuencia es el simbolo inicial y la iltima es una cadena de terminales.
+*** Derivación a la derecha y a la izquierda.
+El simbolo no terminal más a la derecha o a la izquierda es el qué se remplaza
+[[file:DerivacionLR.png][Derivación]]
+*** Arbol de derivación
+Representa una derivación valida de una cadena. (No se sabe en qué orden se aplicaron las reglas)
+*** Recursividad por izquierda o por derecha
+Para una regla su simbolo de Remplazo y su regla también tienen el mismo simbolo de remplazo, R - R a B | L - B a L
+*** Factores comunes por izquierda.
+Tiene simbolos comunes en la parte derecha de la regla y tiene almenos dos reglas para el simbolo no terminal.
+*** Gramatica Ambigua
+Es posible encontrar más de un Arbol de derivación para una cadena. (La cadena 2+3-4 tiene dos arboles de derivacion distintos).
+[[file:~/Desktop/Capturas de pantalla/Captura de Pantalla 2022-04-09 a la(s) 9.00.31 p.m..png][Ambiguedad  ]]
+*Es ambigua si tienen*
++ Gramaticas con ciclos siples o menos simples. S-A A-S
++ Gramaticas de la forma E - E ... E
+
+** Analisis Sintactico
+
+Tiene acceso a los tokens que enera el Analisis Lexico. Permite saber si una cadena dada pertenece a una Gramatica independiente del contexto (GIC)
+Alimenta la tabla de simbolos también (Estructura en donde se almacena la información del programa).
+
+[[File:./GramaticaExpresiones.png]]
+
+Esta es una gramatica no ambigua para el calculo de expresiones.
+
+*** Analisis sintactico complegidad
+Existen muchos tipos de algoritmos pero el problema es la complegidad de estos se desea que la complejidad sea de O(n)
+*** Caracteristicas no deseables para Analisis sintactico.
+**** Analisis sintactico ascendente
++ Ambiguedad
+**** Analisis sintactico desendente
++ Recursividad por izquierda
++ Factores comunes por la izquierda
++ Ambiguedad.
+*** Analisis sintactico desendente (ASD)
+Reproduce una derivación por la izquierda de la cadena de entrada.
+[[File:./AnalisisSintacticoDesendente.png]]
+*** Analisis sintactico ascendente (ASA)
+Reproduce la inversa de una derivacion por la derecha de la cadena de entrada.
+[[File:./AnalisisSintacticoAscendente.png]]
+
+** Analisis Sintactico Desendente
+
+Permite decidir si una cadena pertenece o no a una gramatica independiente del contexto (GIC).
+ + Desendente: Se remplazan reglas y se representaba la cadena de entrada que tenemos. Si corresponde entonces es valida.
+
+*** Conjuntos de predicción.
+
+Ayudan a decidir la regla a la cual hay que aplicar para mejorar el rendimiento del analizador.
+
+**** Conjunto de Primeros.
+** Implementación Analizador sintactico.
+
+- Se debe diseñar una función para cada simbolo no terminal de la gramatica.
+- Se verifica (empareja) si el simbolo leido pertenece a la regla gramatical.
+- Los conjuntos de predicción NO SON NECESARIAMENTE la unión de los primeros y los siguiente. MIRAR ALGORITMO!
+
+* Análisis Semántico
+** TODO Traducción Dirigida por Sintaxis
+Análisis
+* Generación de Código Intermedio.
+Se aplica en procesos de compilación, se utiliza para generar un codigo intermedio que pueda luego ser interpretado por un interprete, Lenguaje parecido a ensamblador pero en este existen posibilidades de tener variables, al contrario de ensamblador.
+
+
+** 3AC (Three adress code):
+Es un lenguaje similar a ensamblador solo que tenemos registros infinitos, en donde guardar los resultados de las operaciones que se realicen.
+
+** Maquina Virtual (Pseudo-ensamblador)
+Se tiene un registro contador que irá guardando los resultados de las operaciones. Esto para ser operados más facilmente en proximas operaciones.
+
+** Maquina Virtual de Pila
+Cargan en la pila diferentes variables o datos para luego extraerlos y hacer operaciones con estos.
+
+** CIL (Common Intermediate Lenguage) {.NET Mono}
+Es una Maquina Virtual de Pila, tiene instrucciones del siguiente tipo:
+
+[[file:Images/CIL.png][CIL Arbol e Instrucciones]]
+
+*** Tabla de simbolos
+
+Se almacena la información de cada simbolo que hay en el programa (Normalmente se utiliza Tabla HASH):
+
++ Nombre
++ Tipo
++ Dirección
++ Tamaño
+
+Existen diferentes operaciónes que se pueden realizar a la tabla de simbolos, por ejemplo:
+
++ Añadir Nuevo Simbolo: Añade un nuevo simbolo y lo almacena para ser consultado posteriormete.
++ Buscar Simbolo: Busca si existe una variable declarada. *Retorna toda la información del simbolo CLASS SYMBOL*
++ Get <Algo> : Obtener información del simbolo, que exista en la tabla de simbolos.
+
+
+Se pueden declarar variables con mismo nombre en dos ambitos diferentes, teniendo diferentes valores para una misma varible, cuando acaba un bloque de ambito entonces las variables declaradas en ese ambito serán eliminadas.

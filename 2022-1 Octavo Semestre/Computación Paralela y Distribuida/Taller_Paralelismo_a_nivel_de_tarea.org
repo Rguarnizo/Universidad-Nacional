@@ -1,0 +1,45 @@
+#+TITLE: Taller Paralelismo a nivel de Tarea
+#+SUBTITLE: Computación Paralela y Distrubuida
+#+AUTHOR: Rubén Darío Guarnizo Martínez
+
+
+* Taller Paralelismo a nivel de Tarea.
+1) Qué es un conjunto parcialmente ordenado?
+
+   Un conjunto en el cual existe una relación binaria (Es decir, un elemento del conjunt se relaciona con otro dependiendo de una cierta regla) en el cual se formaliza la definición de orden o secuencia, es decir, nos ayuda a definir el orden de unos elementos de un conjunto, y cómo se relacionan entre ellos.
+2) Con base en el siguiente grafo computacional:
+
+    [[File:./Images/GraphDiagram.png]]
+   1) Agregar dos actividades y calcular *work span y paralelismo ideal*
+
+      \[Work: 237\]
+      \[Span: 162\]
+      \[\frac{Work}{Span} = \frac{237}{162} = 1,46296296 \]
+
+   1) Escribir pseudocodigo de inicio y teminación de tareas con async y finish.
+    #+BEGIN_SRC java
+s0
+finish{
+    s2
+    async{
+        s1
+    }
+}
+s3
+finish{
+    s5
+    s5'
+    async{
+        s6
+        s7
+        s7'
+        s8
+
+    }
+}
+s9
+s10
+    #+END_SRC
+3) Este psudocodigo de la suma de dos matrices triangulares inferiores, cada ejecución de la suma es una unidad de tiempo en el grafo computacional. Determinar el work en terminos de n, explicar el resultado.
+
+   El work sería de $(n^2-n)/2$, debido a que el work es la suma de todos los nodos del grafo computacional, al ser una matriz triangular inferior, deberemos hacer j operaciones en la j'esima columna, por ejemplo en la columna 1 tenemos que hacer 1 operación (el elemento (0,1) de una matriz y otra), en la columna 2 tendremos que hacer 2 operaciones(el elemento (0,2) y (1,2) de una matriz y otra), y así hasta el enesimo elemento, pero en el elemento enesimo no sumamos n elementos, sino n-1 ya que el ultimo elemento de la fila enesima es 0. Por lo tanto el WORK sería la suma de todos los nodos del grafo conputacional, como cada nodo vale una unidad de tiempo, entonces tendríamos $1+2+3+4+\cdots+(n-1)$ que sería lo mismo que \[\frac{(n-1)(n+1-1)}{2} = \frac{(n^2-n)}{2}\]
