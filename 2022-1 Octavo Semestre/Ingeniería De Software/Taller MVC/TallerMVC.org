@@ -1,0 +1,31 @@
+#+TITLE: Taller MVC
+
+1) [[file:monolito.py][Ver anexo Monolito.py ]]
+
+2) Deficiencias de patron Monolitico
+   - Si se debe actualizar algún componente del programa, se debe reescribir toda la aplicación
+   - Los componentes de los programas estan interconectados.
+   - Los componentes de los programas están estrechamente acoplados.
+   - Deben de estár todos los componentes para que el programa se ejecute bien.
+   - Dificulta el mantenimiento posterior.
+
+3) [[file:Data_View.py][Ver anexo Data_view.py]]
+
+
+4) Deficiencias del modelo Data-view
+   - No es posible procesar los datos antes de mostrarlos.
+   - La logica de negocios está en los datos, lo cuál es malo.
+   - La vista modifica directamente los datos.
+   - Agrega complegidad a la vista.
+5) [[file:MVC.py][Ver anexo MVC.py]]
+
+6) Ventajas e inconvenientes de MVC
+   1. Ventajas
+      - Probar el sistema se hace más facil.
+      - Permite un mejor escalamiento en caso de ser necesario.
+      - Independencia entre los componentes de la aplicación.
+      - Se facilita agregar múltiples representaciones de datos.
+   2. Desventajas
+      - La separación de conceptos en capas agrega complegidad al sistema.
+      - Cantidad de archivos a mantener es mayor.
+      - Curva de aprendizaje mayor que con otros patrones.
